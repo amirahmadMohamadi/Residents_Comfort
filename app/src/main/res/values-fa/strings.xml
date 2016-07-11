@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">کشیک ریز</string>
+    <string name="action_settings">تنظیمات</string>
+    <string name="constraintTabName">محدودیت ها</string>
+    <string name="createDialogStartDateText">زمان شروع</string>
+    <string name="dayScheduleStatTabName">آمار برنامه سایت</string>
+    <string name="dayScheduleTabName">برنامه سایت</string>
+    <string name="nightConstraintTabName">محدودیت های کشیک</string>
+    <string name="nightScheduleTabName">برنامه کشیک ها</string>
+    <string name="nightSettingTabName">تنظیمات کشیک ها</string>
+    <string name="offChaeckBoxName">نباشد</string>
+    <string name="resident">رزیدنت</string>
+    <string name="residents">رزیدنت ها</string>
+    <string name="settingTabName">تنظیمات</string>
+    <string name="site">سایت</string>
+    <string name="sites">سایت ها</string>
+    <string name="title_activity_schedule_request">ایجاد برنامه</string>
+    <string name="title_activity_schedule_result">تنیجه برنامه ریزی</string>
+    <string name="end_date">زمان پایان</string>
+    <string name="constraint_type">نوع محدودیت</string>
+    <string name="fixed_shift">شیفت ثابت</string>
+    <string name="fixed_days">شیفت ثابت بازه ای</string>
+    <string name="off_days">مرخصی شبانه</string>
+    <string name="select_residents">انتخاب رزیدنت ها</string>
+    <string name="number_of_residents_per_night">نفرات کشیک در هر شب</string>
+    <string name="shift_on_post_night_shift">سایت روز بعد از کشیک</string>
+    <string name="shift_on_night_shift">سایت روز کشیک</string>
+    <string name="name">نام</string>
+    <string name="holidays">تعطیلات</string>
+    <string name="edit">ویرایش</string>
+    <string name="delete">حذف</string>
+</resources>

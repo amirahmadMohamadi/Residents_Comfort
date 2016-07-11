@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Residents\' Comfort</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_schedule_request">Schedule Request</string>
+    <string name="title_activity_schedule_result">Schedule Result</string>
+
+    <string name="residents">Residents</string>
+    <string name="resident">Resident</string>
+    <string name="sites">Sites</string>
+    <string name="site">Site</string>
+    <string name="nightSettingTabName">Night Settings</string>
+    <string name="constraintTabName">Constraints</string>
+    <string name="settingTabName">Settings</string>
+    <string name="nightConstraintTabName">Night Constraints</string>
+    <string name="dayScheduleTabName">Day Schedule</string>
+    <string name="dayScheduleStatTabName">Day Schedule Statistics</string>
+    <string name="nightScheduleTabName">Night Schedule</string>
+    <string name="offChaeckBoxName">off</string>
+    <string name="createDialogStartDateText">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="constraint_type">Constraint Type</string>
+    <string name="fixed_shift">Fixed Shift</string>
+    <string name="fixed_days">Fixed Days</string>
+    <string name="off_days">Off Days</string>
+    <string name="select_residents">Select residents</string>
+    <string name="number_of_residents_per_night">Number of residents per night</string>
+    <string name="shift_on_night_shift">Shift On Night Shift</string>
+    <string name="shift_on_post_night_shift">Shift On Post Night Shift</string>
+    <string name="name">Name</string>
+    <string name="holidays">Holidays</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+</resources>

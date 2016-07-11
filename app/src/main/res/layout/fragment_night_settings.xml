@@ -1,0 +1,94 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".request.NightSettingsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/select_residents"
+        android:id="@+id/textView8"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="170dp"
+        android:id="@+id/residentSelectList"
+        android:layout_below="@+id/textView8"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/number_of_residents_per_night"
+        android:id="@+id/textView9"
+        android:layout_below="@+id/residentSelectList"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/residentNumberText"
+        android:inputType="number"
+        android:layout_below="@+id/textView9"
+        android:layout_alignLeft="@+id/residentSelectList"
+        android:layout_alignStart="@+id/residentSelectList"
+        android:layout_alignRight="@+id/textView8"
+        android:layout_alignEnd="@+id/textView8"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shift_on_night_shift"
+        android:id="@+id/nighShiftSwitch"
+        android:layout_below="@+id/residentNumberText"
+        android:layout_alignLeft="@+id/residentNumberText"
+        android:layout_alignStart="@+id/residentNumberText"
+        android:checked="false"
+        android:layout_alignRight="@+id/residentSelectList"
+        android:layout_alignEnd="@+id/residentSelectList"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner2"
+        android:spinnerMode="dialog"
+        android:layout_below="@+id/posstNightShiftSwitch"
+        android:layout_alignLeft="@+id/posstNightShiftSwitch"
+        android:layout_alignStart="@+id/posstNightShiftSwitch"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shift_on_post_night_shift"
+        android:id="@+id/posstNightShiftSwitch"
+        android:layout_alignLeft="@+id/nighShiftSwitch"
+        android:layout_alignStart="@+id/nighShiftSwitch"
+        android:layout_below="@+id/spinner"
+        android:layout_alignRight="@+id/nighShiftSwitch"
+        android:layout_alignEnd="@+id/nighShiftSwitch"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_below="@+id/nighShiftSwitch"
+        android:layout_alignLeft="@+id/nighShiftSwitch"
+        android:layout_alignStart="@+id/nighShiftSwitch"/>
+</RelativeLayout>
