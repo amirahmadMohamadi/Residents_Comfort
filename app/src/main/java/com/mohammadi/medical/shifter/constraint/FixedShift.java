@@ -21,8 +21,8 @@ import ir.huri.jcal.JalaliCalendar;
 public class FixedShift extends PersonalConstraint
 {
     private List<Site> sites;
-    private LocalDate date;
-    private boolean isDayOff;
+    private LocalDate  date;
+    private boolean    isDayOff;
 
     public FixedShift(LocalDate date, Resident resident, List<Site> sites, boolean isDayOff)
     {
@@ -107,7 +107,7 @@ public class FixedShift extends PersonalConstraint
         }
     }
 
-    public List<Site> getSite()
+    public List<Site> getSites()
     {
         return sites;
     }
@@ -157,7 +157,10 @@ public class FixedShift extends PersonalConstraint
 
     public String toString()
     {
-        return getResident().toString() + " should " + (isDayOff ? "not " : "") + "be in " + Utils.listToString(getSite()) + " in " + new JalaliCalendar(getDate()).toString();
+//        return getResident().toString() + " should " + (isDayOff ? "not " : "") + "be in " + Utils.listToString(getSites()) + " in " + new JalaliCalendar(getDate()).toString();
+        return getResident() + " در " + new JalaliCalendar(getDate()).toString() +
+                (Utils.listToString(getSites()).isEmpty() ? "" : (" در " + Utils.listToString(getSites())))
+                + (isDayOff ? "نباشد " : "باشد");
     }
 
 }

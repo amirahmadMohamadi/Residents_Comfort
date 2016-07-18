@@ -46,9 +46,13 @@ public class SpreadConstraint extends AbstractConstraint
     }
 
     @Override
-    public void postConstraint(Solver solver, AbstractScheduleRequest request, VariablesEntity variables, boolean isKnightShitConstraint)
+    public void postConstraint(Solver solver, AbstractScheduleRequest request, VariablesEntity variables,
+                               boolean isKnightShitConstraint)
     {
-        int minimumSite = (request.getNumberOfDays() - request.getHolidays().size()) / ((ScheduleRequest) request).getSites().size();
+        int minimumSite = (request.getNumberOfDays() - request.getHolidays().size())
+                / ((ScheduleRequest) request).getSites().size();
+
+        Map<Resident, IntVar[]> map = new HashMap<>();
         for (Resident resident : variables.getResidentDateMap().keySet())
         {
             List<Site> list = exceptions.get(resident);
@@ -63,17 +67,58 @@ public class SpreadConstraint extends AbstractConstraint
                 if (list != null && list.contains(((ScheduleRequest) request).getSite(site)))
                     occurances[i] = VariableFactory.fixed(0, solver);
                 else
-                    occurances[i] = VariableFactory.bounded("criteria " + resident.getName(), minimumSite - 1, minimumSite + 2, solver);
+                    occurances[i] = VariableFactory.bounded("criteria " + site + resident.getName(), minimumSite - 2,
+                            minimumSite + 3, solver);
+
+                solver.post(IntConstraintFactory.count( site,
+                        variables.getResidentDateMap().get(resident).values().toArray(new IntVar[0]), occurances[i]));
+
                 i++;
             }
-            solver.post(IntConstraintFactory.global_cardinality(variables.getResidentDateMap().get(resident).values().toArray(new IntVar[0]), values, occurances, true));
+            map.put(resident, occurances);
+//			solver.post(IntConstraintFactory.global_cardinality(
+//					variables.getResidentDateMap().get(resident).values().toArray(new IntVar[0]), values, occurances,
+//					true));
         }
+
+        Map<Integer, List<IntVar>> map2 = new HashMap<>();
+
+        for (int j = 0; j < ((ScheduleRequest) request).getSiteIds().size(); j++)
+        {
+            Integer integer = ((ScheduleRequest) request).getSiteIds().get(j);
+            if (map2.get(integer) == null)
+                map2.put(integer, new ArrayList<IntVar>());
+            for (Map.Entry<Resident, IntVar[]> entry : map.entrySet())
+            {
+                map2.get(integer).add(entry.getValue()[j]);
+            }
+        }
+
+        IntVar[] max = VariableFactory.integerArray("max", ((ScheduleRequest) request).getSites().size(), 0, 7, solver);
+        IntVar[] min = VariableFactory.integerArray("min", ((ScheduleRequest) request).getSites().size(), 0, 7, solver);
+        IntVar[] diff = VariableFactory.integerArray("diff", ((ScheduleRequest) request).getSites().size(), 0, 7,
+                solver);
+
+        for (int j = 0; j < ((ScheduleRequest) request).getSiteIds().size(); j++)
+        {
+            Integer siteId = ((ScheduleRequest) request).getSiteIds().get(j);
+            solver.post(IntConstraintFactory.maximum(max[j], map2.get(siteId).toArray(new IntVar[0])));
+            solver.post(IntConstraintFactory.minimum(min[j], map2.get(siteId).toArray(new IntVar[0])));
+            solver.post(IntConstraintFactory.distance(max[j], min[j], "=", diff[j]));
+
+        }
+
+        IntVar integer = VariableFactory.integer("objective", 0, 70, solver);
+        solver.post(IntConstraintFactory.sum(diff, integer));
+        solver.setObjectives(integer);
+
+        // solver.setObjectives(diff);
 
     }
 
     public boolean isEditable()
     {
-        return false;
+        return true;
     }
 
     public boolean isDeletable()
@@ -83,6 +128,7 @@ public class SpreadConstraint extends AbstractConstraint
 
     public String toString()
     {
-        return "sites must be uniformly spread among residents";
+//        return "sites must be uniformly spread among residents";
+        return "سایت ها باید متوازن بین رزیدنت ها تقسیم شود.";
     }
 }

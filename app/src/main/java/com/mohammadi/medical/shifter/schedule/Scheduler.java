@@ -12,6 +12,8 @@ import org.chocosolver.solver.ResolutionPolicy;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.IntConstraintFactory;
 import org.chocosolver.solver.explanations.ExplanationFactory;
+import org.chocosolver.solver.search.loop.monitors.IMonitorSolution;
+import org.chocosolver.solver.search.solution.Solution;
 import org.chocosolver.solver.search.strategy.IntStrategyFactory;
 import org.chocosolver.solver.search.strategy.selectors.values.IntDomainMin;
 import org.chocosolver.solver.search.strategy.selectors.variables.Random;
@@ -28,6 +30,8 @@ import org.joda.time.Weeks;
 import com.mohammadi.medical.shifter.constraint.AbstractConstraint;
 import com.mohammadi.medical.shifter.constraint.ConstraintUtil;
 import com.mohammadi.medical.shifter.constraint.FixedDays;
+import com.mohammadi.medical.shifter.constraint.defaults.day.SpreadConstraint;
+import com.mohammadi.medical.shifter.constraint.defaults.day.SpreadException;
 import com.mohammadi.medical.shifter.entities.DaySchedule;
 import com.mohammadi.medical.shifter.entities.Resident;
 import com.mohammadi.medical.shifter.entities.Schedule;
@@ -281,13 +285,32 @@ public class Scheduler implements Serializable
         return scheduleResult;
     }
 
-    public Schedule schedule(ScheduleRequest request) throws SchedulingFailedException
+    public Schedule schedule(final ScheduleRequest request) throws SchedulingFailedException
     {
-        Solver solver = new Solver(request.getName());
+        final Solver solver = new Solver(request.getName());
 
-        VariablesEntity variables = createVariables(request, solver);
+        final VariablesEntity variables = createVariables(request, solver);
 
         // Constraints
+        SpreadConstraint spread = null;
+        for (AbstractConstraint constraint : request.getConstraints())
+        {
+            if (constraint instanceof SpreadConstraint)
+            {
+                spread = (SpreadConstraint) constraint;
+                break;
+            }
+        }
+
+        if (spread != null)
+            for (AbstractConstraint constraint : request.getConstraints())
+            {
+                if (constraint instanceof SpreadException)
+                {
+                    spread.addException(((SpreadException) constraint).getResident(), ((SpreadException) constraint).getSites());
+                }
+            }
+
         for (AbstractConstraint constraint : request.getConstraints())
         {
             constraint.postConstraint(solver, request, variables, false);
@@ -306,6 +329,29 @@ public class Scheduler implements Serializable
 
         }
 
+        List<LocalDate> days = new ArrayList<>();
+        for (int i = 0; i < request.getNumberOfDays(); i++)
+        {
+            if (request.getHolidays().contains(request.getStartDate().plusDays(i)) == false)
+                days.add(request.getStartDate().plusDays(i));
+        }
+
+        for (Resident resident : variables.getResidentDateMap().keySet())
+        {
+            for (int i = 0; i < days.size() - 1; i = i + 2)
+            {
+                LocalDate day = days.get(i);
+                Days day1 = Days.daysBetween(request.getStartDate(), day);
+                Days day2 = Days.daysBetween(request.getStartDate(), days.get(i + 1));
+                if (request.hasConstraint(resident, day) == false)
+                {
+                    IntConstraintFactory.arithm(variables.getResidentDateMap().get(resident).get(day1.getDays()), "!=",
+                            variables.getResidentDateMap().get(resident).get(day2.getDays())
+                    );
+                }
+            }
+        }
+
         // Solve
         solver.set(IntStrategyFactory.custom(new Random<IntVar>(3564564L), new IntDomainMin(), variables.getAllVars().toArray(new IntVar[0])));
         solver.makeCompleteSearch(true);
@@ -321,9 +367,31 @@ public class Scheduler implements Serializable
         //
         // solver.getEngine().flush();
         request.getSettings().applySettings(solver);
-        Chatterbox.showContradiction(solver);
-        ExplanationFactory.DBT.plugin(solver, true, false);
-        System.out.println("solution is found = " + solver.findSolution());
+        // Chatterbox.showContradiction(solver);
+        solver.plugMonitor(new IMonitorSolution()
+        {
+
+            /**
+             *
+             */
+            private static final long serialVersionUID = -4406771340152130183L;
+
+            @Override
+            public void onSolution()
+            {
+                Solution solution = new Solution();
+                solution.record(solver);
+                System.out.println(solution.toString(solver));
+
+                Schedule schedule = convertToSchedule(variables.getDateResidentMap(), request);
+                // System.out.println(schedule);
+                System.out.println(schedule.getNumberMapString());
+            }
+        });
+        ExplanationFactory.DBT.plugin(solver, false, false);
+        solver.findOptimalSolution(ResolutionPolicy.MINIMIZE);
+        // System.out.println("solution is found = " +
+        // solver.findAllSolutions());
 
         Chatterbox.printStatistics(solver);
         //

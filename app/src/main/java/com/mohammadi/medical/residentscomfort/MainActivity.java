@@ -30,6 +30,8 @@ import com.mohammadi.medical.residentscomfort.result.ScheduleResultActivity;
 import com.mohammadi.medical.shifter.constraint.FixedDays;
 import com.mohammadi.medical.shifter.constraint.FixedShift;
 import com.mohammadi.medical.shifter.constraint.OffDays;
+import com.mohammadi.medical.shifter.constraint.defaults.day.SpreadConstraint;
+import com.mohammadi.medical.shifter.constraint.defaults.day.SpreadException;
 import com.mohammadi.medical.shifter.entities.Resident;
 import com.mohammadi.medical.shifter.entities.Schedule;
 import com.mohammadi.medical.shifter.entities.Site;
@@ -148,6 +150,8 @@ public class MainActivity extends AppCompatActivity
         request.getNightShiftScheduleRequest().removeResident(hajihashemi);
 
         // Constraints
+        request.addConstraint(new SpreadException(hajihashemi, Arrays.asList(scopy)));
+
         request.addConstraint(new FixedDays(new JalaliCalendar(1395, 4, 25).toLocalDate(), new JalaliCalendar(1395, 4, 26).toLocalDate(), akhoundi, sonoEx));
 
         request.addConstraint(new FixedShift(new JalaliCalendar(1395, 4, 19).toLocalDate(), borji, Arrays.asList(sonoEx), false));
@@ -538,7 +542,7 @@ public class MainActivity extends AppCompatActivity
         final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
         // setup a dialog window
         alertDialogBuilder.setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
@@ -565,7 +569,7 @@ public class MainActivity extends AppCompatActivity
 
                 })
                 .setNegativeButton(
-                        "Cancel",
+                        getString(R.string.cancel),
                         new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int id)

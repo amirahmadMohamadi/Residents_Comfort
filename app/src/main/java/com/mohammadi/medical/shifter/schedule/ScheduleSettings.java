@@ -20,7 +20,7 @@ public class ScheduleSettings implements Cloneable, Serializable
 
 	public ScheduleSettings()
 	{
-		setTimeLimit(Duration.standardMinutes(1));
+		setTimeLimit(Duration.standardMinutes(2));
 	}
 
 	public Duration getTimeLimit()

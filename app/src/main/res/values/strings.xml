@@ -30,4 +30,11 @@
     <string name="holidays">Holidays</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="date">Date</string>
+    <string name="create_constraint">Create Constraint</string>
+    <string name="daynight">DayNight</string>
+    <string name="night">Night</string>
+    <string name="day">Day</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

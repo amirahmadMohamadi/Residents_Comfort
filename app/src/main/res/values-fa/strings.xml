@@ -30,4 +30,11 @@
     <string name="holidays">تعطیلات</string>
     <string name="edit">ویرایش</string>
     <string name="delete">حذف</string>
+    <string name="date">تاریخ</string>
+    <string name="create_constraint">ایجاد محدودیت</string>
+    <string name="daynight">سایت و گشیک</string>
+    <string name="night">کشیک</string>
+    <string name="day">سایت</string>
+    <string name="ok">تایید</string>
+    <string name="cancel">بیخیال</string>
 </resources>

@@ -18,6 +18,10 @@ import ir.huri.jcal.JalaliCalendar;
 
 public class Schedule implements Serializable
 {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4355610000968209464L;
     private List<Site>                     sites;
     private Map<LocalDate, DaySchedule>    map;
     private Map<LocalDate, List<Resident>> nightShifts;
@@ -104,6 +108,14 @@ public class Schedule implements Serializable
             }
         }
 
+        for (Site site : getSites())
+        {
+            for (Entry<Resident, Map<Site, Integer>> entry : numberMap.entrySet())
+            {
+                if (entry.getValue().get(site) == null)
+                    entry.getValue().put(site, 0);
+            }
+        }
         return numberMap;
     }
 
@@ -118,7 +130,7 @@ public class Schedule implements Serializable
 
         sb.append(String.format("%-15s", "بخش"));
         sb.append("\t");
-        for (Site site : ((Map<Site, Integer>) (numberMap.entrySet().toArray(new Entry[0]))[0].getValue()).keySet())
+        for (Site site : getSites())
         {
             sb.append(String.format("%-10s", site));
             sb.append("\t");
@@ -130,9 +142,9 @@ public class Schedule implements Serializable
         {
             sb.append(String.format("%-15s", entry.getKey()));
             sb.append("\t");
-            for (Entry<Site, Integer> entry2 : entry.getValue().entrySet())
+            for (Site site : getSites())
             {
-                sb.append(String.format("%-10d", entry2.getValue()));
+                sb.append(String.format("%-10d", entry.getValue().get(site)));
                 sb.append("\t");
             }
             sb.append(String.format("%n"));

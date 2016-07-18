@@ -27,6 +27,7 @@ import com.mohammadi.medical.shifter.constraint.FixedDays;
 import com.mohammadi.medical.shifter.constraint.FixedShift;
 import com.mohammadi.medical.shifter.constraint.OffDays;
 import com.mohammadi.medical.shifter.constraint.PersonalConstraint;
+import com.mohammadi.medical.shifter.constraint.defaults.day.SpreadException;
 import com.mohammadi.medical.shifter.entities.Resident;
 import com.mohammadi.medical.shifter.entities.Site;
 
@@ -164,65 +165,94 @@ public class CreateConstraintFragment extends AppCompatDialogFragment
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
             {
-                if (adapterView.getSelectedItem() == Constraints.FixedShift)
+                switch ((Constraints) adapterView.getSelectedItem())
                 {
-                    if (isDay)
+                    case FixedShift:
                     {
-                        sitesSpinner.setVisibility(View.GONE);
-                        siteSelectionList.setVisibility(View.VISIBLE);
-                        siteLabel.setVisibility(View.VISIBLE);
+                        if (isDay)
+                        {
+                            sitesSpinner.setVisibility(View.GONE);
+                            siteSelectionList.setVisibility(View.VISIBLE);
+                            siteLabel.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            sitesSpinner.setVisibility(View.GONE);
+                            siteSelectionList.setVisibility(View.GONE);
+                            siteLabel.setVisibility(View.GONE);
+                        }
+                        startDateLabel.setText(getString(R.string.date));
+                        endDateLabel.setVisibility(View.GONE);
+                        endDateButton.setVisibility(View.GONE);
+                        offCheckBox.setVisibility(View.VISIBLE);
+                        break;
                     }
-                    else
+                    case FixedDays:
                     {
-                        sitesSpinner.setVisibility(View.GONE);
-                        siteSelectionList.setVisibility(View.GONE);
-                        siteLabel.setVisibility(View.GONE);
-                    }
-                    startDateLabel.setText("Date");
-                    endDateLabel.setVisibility(View.GONE);
-                    endDateButton.setVisibility(View.GONE);
-                    offCheckBox.setVisibility(View.VISIBLE);
-                }
-                else if (adapterView.getSelectedItem() == Constraints.FixedDays)
-                {
-                    if (isDay)
-                    {
-                        sitesSpinner.setVisibility(View.VISIBLE);
-                        siteSelectionList.setVisibility(View.GONE);
-                        siteLabel.setVisibility(View.VISIBLE);
-                    }
-                    else
-                    {
-                        sitesSpinner.setVisibility(View.GONE);
-                        siteSelectionList.setVisibility(View.GONE);
-                        siteLabel.setVisibility(View.GONE);
-                    }
-                    startDateLabel.setText("Start Date");
-                    endDateLabel.setVisibility(View.VISIBLE);
-                    endDateButton.setVisibility(View.VISIBLE);
-                    offCheckBox.setVisibility(View.GONE);
+                        if (isDay)
+                        {
+                            sitesSpinner.setVisibility(View.VISIBLE);
+                            siteSelectionList.setVisibility(View.GONE);
+                            siteLabel.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            sitesSpinner.setVisibility(View.GONE);
+                            siteSelectionList.setVisibility(View.GONE);
+                            siteLabel.setVisibility(View.GONE);
+                        }
+                        startDateLabel.setText(getString(R.string.createDialogStartDateText));
+                        endDateLabel.setVisibility(View.VISIBLE);
+                        endDateButton.setVisibility(View.VISIBLE);
+                        offCheckBox.setVisibility(View.GONE);
 
-                }
-                else if (adapterView.getSelectedItem() == Constraints.OffDays)
-                {
-                    if (isDay)
-                    {
-                        sitesSpinner.setVisibility(View.GONE);
-                        siteSelectionList.setVisibility(View.GONE);
-                        siteLabel.setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        sitesSpinner.setVisibility(View.GONE);
-                        siteSelectionList.setVisibility(View.GONE);
-                        siteLabel.setVisibility(View.GONE);
-                    }
-                    startDateLabel.setText("Start Date");
-                    endDateLabel.setVisibility(View.VISIBLE);
-                    endDateButton.setVisibility(View.VISIBLE);
-                    offCheckBox.setVisibility(View.GONE);
-                }
+                        break;
 
+                    }
+                    case OffDays:
+                    {
+                        if (isDay)
+                        {
+                            sitesSpinner.setVisibility(View.GONE);
+                            siteSelectionList.setVisibility(View.GONE);
+                            siteLabel.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            sitesSpinner.setVisibility(View.GONE);
+                            siteSelectionList.setVisibility(View.GONE);
+                            siteLabel.setVisibility(View.GONE);
+                        }
+                        startDateLabel.setText(getString(R.string.createDialogStartDateText));
+                        endDateLabel.setVisibility(View.VISIBLE);
+                        endDateButton.setVisibility(View.VISIBLE);
+                        offCheckBox.setVisibility(View.GONE);
+
+                        break;
+                    }
+                    case Spread:
+                    {
+                        if (isDay)
+                        {
+                            sitesSpinner.setVisibility(View.GONE);
+                            siteSelectionList.setVisibility(View.VISIBLE);
+                            siteLabel.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            sitesSpinner.setVisibility(View.GONE);
+                            siteSelectionList.setVisibility(View.GONE);
+                            siteLabel.setVisibility(View.GONE);
+                        }
+                        startDateLabel.setVisibility(View.GONE);
+                        startDateButton.setVisibility(View.GONE);
+                        endDateLabel.setVisibility(View.GONE);
+                        endDateButton.setVisibility(View.GONE);
+                        offCheckBox.setVisibility(View.GONE);
+
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -312,7 +342,7 @@ public class CreateConstraintFragment extends AppCompatDialogFragment
 
             case FixedShift:
                 residentsSpinner.setSelection(residents.indexOf(constraint.getResident()));
-                for (Site site : ((FixedShift) constraint).getSite())
+                for (Site site : ((FixedShift) constraint).getSites())
                     siteSelectionList.setItemChecked(sites.indexOf(site), true);
                 setStartDate(((FixedShift) constraint).getDate());
                 startDateButton.setText(new JalaliCalendar(getStartDate()).toString());
@@ -331,7 +361,11 @@ public class CreateConstraintFragment extends AppCompatDialogFragment
                 startDateButton.setText(new JalaliCalendar(getStartDate()).toString());
                 setEndDate(((OffDays) constraint).getEnd());
                 endDateButton.setText(new JalaliCalendar(getEndDate()).toString());
-
+                break;
+            case Spread:
+                residentsSpinner.setSelection(residents.indexOf(constraint.getResident()));
+                for (Site site : ((SpreadException) constraint).getSites())
+                    siteSelectionList.setItemChecked(sites.indexOf(site), true);
                 break;
         }
 
@@ -350,9 +384,9 @@ public class CreateConstraintFragment extends AppCompatDialogFragment
         alertDialogBuilder.setView(view);
 
         // setup a dialog window
-        alertDialogBuilder.setTitle("Create Constraint");
+        alertDialogBuilder.setTitle(getString(R.string.create_constraint));
         alertDialogBuilder.setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                .setPositiveButton(getActivity().getString(R.string.ok), new DialogInterface.OnClickListener()
                 {
 
                     @Override
@@ -373,7 +407,7 @@ public class CreateConstraintFragment extends AppCompatDialogFragment
                     }
                 })
                 .setNegativeButton(
-                        "Cancel",
+                        getActivity().getString(R.string.cancel),
                         new DialogInterface.OnClickListener()
                         {
                             public void onClick(DialogInterface dialog, int id)
@@ -413,6 +447,19 @@ public class CreateConstraintFragment extends AppCompatDialogFragment
             case OffDays:
                 constraint = new OffDays(getStartDate(), getEndDate(), (Resident) residentsSpinner.getSelectedItem());
                 break;
+            case Spread:
+                sites = new ArrayList<>();
+
+                positions = siteSelectionList.getCheckedItemPositions();
+                for (int i = 0; i < positions.size(); i++)
+                {
+                    int key = positions.keyAt(i);
+                    Object obj = positions.get(key);
+                    if (obj.equals(Boolean.TRUE))
+                        sites.add(getSites().get(key));
+                }
+                constraint = new SpreadException((Resident) residentsSpinner.getSelectedItem(), sites);
+                break;
         }
 
         return constraint;
@@ -445,7 +492,7 @@ public class CreateConstraintFragment extends AppCompatDialogFragment
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

@@ -12,9 +12,10 @@ import java.util.List;
  */
 public enum Constraints
 {
-    FixedShift("Fixed Shift", true, true),
-    FixedDays("Fixed Days", true, true),
-    OffDays("Off Days", true, false);
+    FixedShift("محدودیت روزانه", true, true),
+    FixedDays("محدودیت دوره ای", true, true),
+    OffDays("مرخصی", true, false),
+    Spread("محدودیت کلی", true, false);
 
     private final String  name;
     private       boolean isDaySupported;

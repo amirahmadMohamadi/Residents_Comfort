@@ -142,6 +142,7 @@ public class OffDays extends PersonalConstraint
 
     public String toString()
     {
-        return getResident().toString() + " should be off from " + new JalaliCalendar(getStart()).toString() + " to " + new JalaliCalendar(getEnd()).toString();
+//        return getResident().toString() + " should be off from " + new JalaliCalendar(getStart()).toString() + " to " + new JalaliCalendar(getEnd()).toString();
+        return getResident().toString() + " از " + new JalaliCalendar(getStart()).toString() + " تا " + new JalaliCalendar(getEnd()).toString() + "نباشد";
     }
 }

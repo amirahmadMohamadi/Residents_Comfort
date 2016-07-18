@@ -16,6 +16,8 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
 import com.mohammadi.medical.shifter.constraint.AbstractConstraint;
+import com.mohammadi.medical.shifter.constraint.FixedDays;
+import com.mohammadi.medical.shifter.constraint.FixedShift;
 import com.mohammadi.medical.shifter.constraint.PersonalConstraint;
 import com.mohammadi.medical.shifter.entities.Resident;
 
@@ -256,6 +258,21 @@ public abstract class AbstractScheduleRequest implements Cloneable, Parcelable, 
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean hasConstraint(Resident resident, LocalDate plusDays)
+    {
+        for (AbstractConstraint abstractConstraint : getConstraintsFor(resident))
+        {
+            if (abstractConstraint instanceof FixedDays)
+                if (((FixedDays) abstractConstraint).getStart().isBefore(plusDays)
+                        && ((FixedDays) abstractConstraint).getEnd().isAfter(plusDays))
+                    return true;
+                else if (abstractConstraint instanceof FixedShift)
+                    if (((FixedShift) abstractConstraint).getDate().equals(plusDays))
+                        return true;
+        }
+        return false;
     }
 
     public String toString()

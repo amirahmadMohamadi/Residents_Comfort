@@ -9,7 +9,7 @@ public abstract class PersonalConstraint extends AbstractConstraint
 
     private Resident resident;
 
-    PersonalConstraint()
+    public PersonalConstraint()
     {
         setImportance(ConstraintImportance.Important);
     }
